@@ -1,5 +1,5 @@
 # signals.py
-# Functions to represent the Road Input to the Suspension System
+# Function to represent the Road Input (Speed Bump)to the Suspension System
 
 import numpy as np
 
@@ -23,16 +23,3 @@ def half_sine_bump(amplitude=0.05, length=0.5, speed=20.0):
         return y
     return y, duration
 
-def sine_sweep(amplitude=0.005, f_start=0.5, f_end=20.0, T=20.0):
-    """
-    Linear frequency sweep from f_start to f_end over time T.
-    Returns y(t) with small amplitude (default 5 mm).
-    """
-    k = (f_end - f_start) / T  # Hz/s
-
-    def y(t):
-        t = np.asarray(t)
-        # Instantaneous frequency f(t) = f_start + k t
-        phase = 2.0 * np.pi * (f_start * t + 0.5 * k * t**2)
-        return amplitude * np.sin(phase)
-    return y, T
