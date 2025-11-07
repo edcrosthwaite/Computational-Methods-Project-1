@@ -1,7 +1,5 @@
-
-"""
-Road input signals y(t) for the quarter-car model.
-"""
+# signals.py
+# Functions to represent the Road Input to the Suspension System
 
 import numpy as np
 
