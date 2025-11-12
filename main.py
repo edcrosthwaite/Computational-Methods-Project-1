@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 from params import SuspensionParams
 from design import tune_ks_for_target_fn, coupled_natural_frequencies, sprung_fn_simple, unsprung_fn_simple
-from signals import half_sine_bump, sine_sweep
+from signals import half_sine_bump
 from model import rk4, rhs_passive, rhs_skyhook
 from metrics import compute_outputs
 from fit_damper import synth_damper_data, fit_piecewise_interpolant

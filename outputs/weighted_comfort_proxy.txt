@@ -1,0 +1,2 @@
+Weighted (proxy) RMS acc – Passive: 1.5856 m/s^2
+Weighted (proxy) RMS acc – Skyhook: 1.5587 m/s^2
