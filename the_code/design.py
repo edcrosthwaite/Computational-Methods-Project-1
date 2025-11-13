@@ -40,3 +40,4 @@ def coupled_natural_frequencies(params: SuspensionParams, c_lin: float = 1000.0)
     w = np.sqrt(np.sort(evals))
     f = w/(2.0*np.pi)
     return f[0], f[1]
+

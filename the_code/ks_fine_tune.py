@@ -4,7 +4,7 @@ based on the coupled 2-DOF body mode.
 """
 import os
 import numpy as np
-from the_code.params import SuspensionParams
+from params import SuspensionParams
 
 
 def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
