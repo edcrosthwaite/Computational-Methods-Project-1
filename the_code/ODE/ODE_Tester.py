@@ -1,6 +1,6 @@
 from params import SuspensionParams
 from signals import half_sine_bump
-from ODE_RK4 import rk4, rhs_passive
+from the_code.ODE.ODE_RK4 import rk4, rhs_passive
 import numpy as np
 import matplotlib.pyplot as plt
 

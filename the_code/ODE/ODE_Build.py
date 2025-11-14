@@ -166,24 +166,3 @@ print("Max tyre defl:     ", max_tyre_skyhook*1000, "mm")
 print("RMS acceleration:  ", rms_acc_skyhook, "m/s^2")
 
 
-'''
-# Plotting results
-plt.figure(figsize=(10,5))
-plt.plot(t, suspension_travel*1000, label="Suspension Travel (mm)")
-plt.plot(t, tyre_deflection*1000, label="Tyre Deflection (mm)")
-plt.xlabel("Time (s)")
-plt.ylabel("Displacement (mm)")
-plt.grid(True)
-plt.legend()
-plt.tight_layout()
-plt.show()
-
-plt.figure(figsize=(10,4))
-plt.plot(t, x_s_ddot, label="Sprung Mass Acceleration (m/s²)")
-plt.xlabel("Time (s)")
-plt.ylabel("Acceleration (m/s²)")
-plt.grid(True)
-plt.legend()
-plt.tight_layout()
-plt.show()
-'''

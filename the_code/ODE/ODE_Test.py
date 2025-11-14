@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 from params import SuspensionParams
 from signals import half_sine_bump
-from ODE_RK4 import rk4, rhs_passive, rhs_skyhook  # adjust module name if needed
+from the_code.ODE.ODE_RK4 import rk4, rhs_passive, rhs_skyhook  # adjust module name if needed
 
 
 def compute_metrics(t, Y, y_fun, params: SuspensionParams) -> dict:
