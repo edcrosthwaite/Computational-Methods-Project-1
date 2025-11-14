@@ -13,7 +13,7 @@ class SuspensionParams:
     mu: float = 40.0    # unsprung mass [kg]
 
     # Stiffness (initial guesses; ks may be updated by root finding)
-    ks: float = 25_000.0   # suspension spring stiffness [N/m] (20 kN/m)
+    ks: float = 15000.0   # suspension spring stiffness [N/m] (20 kN/m)
     kt: float = 200_000.0  # tyre stiffness [N/m] (190 kN/m)
 
     # Passive damper asymmetry (compression vs rebound)

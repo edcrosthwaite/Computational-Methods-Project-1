@@ -1,0 +1,191 @@
+import numpy as np  # arrays, maths etc
+from scipy.integrate import solve_ivp  # ODE solver
+import matplotlib.pyplot as plt  # plotting
+
+# Parameters 
+m_s = 300.0      # sprung mass [kg]
+m_u = 40.0       # unsprung mass [kg]
+k_s = 28510.0    # suspension spring stiffness [N/m]
+k_t = 200000.0   # tyre stiffness [N/m]
+
+# Nonlinear passive / semi-active damper parameters
+c_min = 500.0    # low damping [Ns/m]
+c_max = 3000.0   # high damping [Ns/m]
+v0    = 0.05     # velocity threshold [m/s] for piecewise passive
+
+v = 10.0         # vehicle speed [m/s]
+
+
+# Road input, half-cosine bump
+def road_input(t, v, h=0.05, L=1.0):
+    """
+    Half-cosine bump of height h and length L travelled at speed v.
+    """
+    x = v * t
+    if 0 <= x <= L:
+        return 0.5 * h * (1 - np.cos(2 * np.pi * x / L))
+    return 0.0
+
+
+# --------------- Damper models --------------
+
+def F_passive_piecewise(v_rel, c_min, c_max, v0):
+    """
+    Nonlinear passive damper:
+    - low damping c_min for small |v_rel|
+    - high damping c_max for large |v_rel|
+    Works with scalars or numpy arrays.
+    """
+    c_eff = np.where(np.abs(v_rel) < v0, c_min, c_max)
+    return c_eff * v_rel
+
+
+# --------------- ODEs -----------------------
+
+def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_min, c_max, v0, k_t, v):
+    """
+    Quarter-car with nonlinear passive (piecewise) damper.
+    state = [x_s, x_s_dot, x_u, x_u_dot]
+    returns [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
+    """
+    x_s, x_s_dot, x_u, x_u_dot = state
+
+    # Road input
+    z_r = road_input(t, v)
+
+    # Relative quantities
+    x_su = x_s - x_u
+    v_rel = x_s_dot - x_u_dot
+
+    # Nonlinear passive damper force
+    F_d = F_passive_piecewise(v_rel, c_min, c_max, v0)
+
+    # Equations of motion
+    x_s_ddot = (-k_s * x_su - F_d) / m_s
+
+    x_ur = x_u - z_r
+    x_u_ddot = (k_s * x_su + F_d - k_t * x_ur) / m_u
+
+    return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
+
+
+def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v):
+    """
+    Quarter-car with semi-active clipped skyhook damper.
+    state = [x_s, x_s_dot, x_u, x_u_dot]
+    """
+    x_s, x_s_dot, x_u, x_u_dot = state
+
+    # Road input
+    z_r = road_input(t, v)
+
+    # Relative quantities
+    x_su = x_s - x_u
+    v_rel = x_s_dot - x_u_dot
+
+    # Clipped skyhook: use c_max when damping reduces body motion, else c_min
+    if x_s_dot * v_rel > 0:
+        c_eff = c_max
+    else:
+        c_eff = c_min
+    F_d = c_eff * v_rel
+
+    # Equations of motion
+    x_s_ddot = (-k_s * x_su - F_d) / m_s
+
+    x_ur = x_u - z_r
+    x_u_ddot = (k_s * x_su + F_d - k_t * x_ur) / m_u
+
+    return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
+
+
+# Simulation settings
+
+t_start = 0.0
+t_end = 5.0
+t_eval = np.linspace(t_start, t_end, 2000)
+
+# Initial state: [x_s, x_s_dot, x_u, x_u_dot]
+x0 = [0.0, 0.0, 0.0, 0.0]
+
+# Passive simulation
+sol = solve_ivp(
+    fun=lambda t, y: quarter_car_ode_passive(t, y, m_s, m_u, k_s, c_min, c_max, v0, k_t, v),
+    t_span=(t_start, t_end),
+    y0=x0,
+    t_eval=t_eval,
+    method='RK45'
+)
+
+# Skyhook simulation
+sol_sky = solve_ivp(
+    fun=lambda t, y: quarter_car_ode_skyhook(t, y, m_s, m_u, k_s, c_min, c_max, k_t, v),
+    t_span=(t_start, t_end),
+    y0=x0,
+    t_eval=t_eval,
+    method='RK45'
+)
+
+print(f"Passive ODE solver success: {sol.success}, message: {sol.message}")
+print(f"Skyhook ODE solver success: {sol_sky.success}, message: {sol_sky.message}")
+
+# Extracting solutions
+
+# Passive
+t = sol.t
+x_s     = sol.y[0, :]
+x_s_dot = sol.y[1, :]
+x_u     = sol.y[2, :]
+x_u_dot = sol.y[3, :]
+
+# Skyhook
+t_sky       = sol_sky.t
+x_s_sky     = sol_sky.y[0, :]
+x_s_dot_sky = sol_sky.y[1, :]
+x_u_sky     = sol_sky.y[2, :]
+x_u_dot_sky = sol_sky.y[3, :]
+
+# Road profiles
+z_r_passive = np.array([road_input(ti, v) for ti in t])
+z_r_sky     = np.array([road_input(ti, v) for ti in t_sky])
+
+# Derived quantities
+
+# Passive
+travel_passive = x_s - x_u
+tyre_passive   = x_u - z_r_passive
+v_rel_passive  = x_s_dot - x_u_dot
+F_d_passive    = F_passive_piecewise(v_rel_passive, c_min, c_max, v0)
+acc_passive    = (-k_s * (x_s - x_u) - F_d_passive) / m_s
+
+# Skyhook
+travel_skyhook = x_s_sky - x_u_sky
+tyre_skyhook   = x_u_sky - z_r_sky
+vel_rel_sky    = x_s_dot_sky - x_u_dot_sky
+c_eff_sky      = np.where(x_s_dot_sky * vel_rel_sky > 0, c_max, c_min)
+F_d_sky        = c_eff_sky * vel_rel_sky
+acc_skyhook    = (-k_s * (x_s_sky - x_u_sky) - F_d_sky) / m_s
+
+# Performance metrics 
+
+# Passive
+max_travel_passive = np.max(np.abs(travel_passive))
+max_tyre_passive   = np.max(np.abs(tyre_passive))
+rms_acc_passive    = np.sqrt(np.mean(acc_passive**2))
+
+# Skyhook
+max_travel_skyhook = np.max(np.abs(travel_skyhook))
+max_tyre_skyhook   = np.max(np.abs(tyre_skyhook))
+rms_acc_skyhook    = np.sqrt(np.mean(acc_skyhook**2))
+
+# --------------- Print results --------------
+
+print("=== PASSIVE (piecewise nonlinear) ===")
+print(f"Max travel:        {max_travel_passive*1000:.2f} mm")
+print(f"Max tyre defl:     {max_tyre_passive*1000:.2f} mm")
+print(f"RMS acceleration:  {rms_acc_passive:.3f} m/s^2")
+
+print("\n=== SKYHOOK (clipped) ===")
+print(f"Max travel:        {max_travel_skyhook*1000:.2f} mm")
+print(f"Max tyre defl:     {max_tyre_skyhook*1000:.2f} mm")
+print(f"RMS acceleration:  {rms_acc_skyhook:.3f} m/s^2")

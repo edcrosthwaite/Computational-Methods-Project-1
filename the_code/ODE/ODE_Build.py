@@ -5,21 +5,20 @@ import matplotlib.pyplot as plt # plotting
 # Parameters
 m_s = 300.0  # sprung mass [kg]
 m_u = 40.0   # unsprung mass [kg]
-k_s = 20000.0  # suspension spring stiffness [N/m]
-k_t = 190000.0 # tyre stiffness [N/m]
+k_s = 28000.0  # suspension spring stiffness [N/m]
+k_t = 200000.0 # tyre stiffness [N/m]
 c_s = 1500.0  # suspension damping [Ns/m]
-c_comp = 3000.0  # damper compression damping [Ns/m]
+c_comp = 10000.0  # damper compression damping [Ns/m]
 c_reb = 1500.0   # damper rebound damping [Ns/m]
 
-v = 20.0  # vehicle speed [m/s]
+v = 10.0  # vehicle speed [m/s]
 
 # Road input: half-sine bump
-def road_input(t, v):
-    '''Simple placeholder road profile, can replace with more complex function later'''
-    A = 0.02    # bump amplitude [m]
-    freq = 1.0   # bump frequency [Hz]
-    z_r = A * np.sin(2 * np.pi * freq * t)
-    return z_r
+def road_input(t, v, h=0.05, L=1.0):
+    x = v * t
+    if 0 <= x <= L:
+        return 0.5 * h * (1 - np.cos(2 * np.pi * x / L))
+    return 0.0
 
 # ODE for passive quarter-car model
 def quarter_car_ode(t, state, m_s, m_u, k_s, c_s, k_t, v):
