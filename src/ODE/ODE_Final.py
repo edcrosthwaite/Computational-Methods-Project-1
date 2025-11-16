@@ -3,6 +3,10 @@ from scipy.integrate import solve_ivp  # ODE solver
 import matplotlib.pyplot as plt  # plotting
 from constants import VELOCITY_THRESHOLD, T_START, T_END, T_EVAL, X_INITIAL_STATE
 
+from ODEdampers import F_passive_piecewise
+from ODEodes import quarter_car_ode_passive, quarter_car_ode_skyhook
+from ODEroad import road_input
+
 # Parameters 
 m_s = 300.0      # sprung mass [kg]
 m_u = 40.0       # unsprung mass [kg]
@@ -14,90 +18,6 @@ c_min = 500.0    # low damping [Ns/m]
 c_max = 3000.0   # high damping [Ns/m]
 
 v = 5.0         # vehicle speed [m/s]
-
-
-# Road input, half-cosine bump
-def road_input(t, v, h=0.05, L=1.0):
-    """
-    Half-cosine bump of height h and length L travelled at speed v.
-    """
-    x = v * t
-    if 0 <= x <= L:
-        return 0.5 * h * (1 - np.cos(2 * np.pi * x / L))
-    return 0.0
-
-
-# --------------- Damper models --------------
-
-def F_passive_piecewise(v_rel, c_min, c_max, v0):
-    """
-    Nonlinear passive damper:
-    - low damping c_min for small |v_rel|
-    - high damping c_max for large |v_rel|
-    Works with scalars or numpy arrays.
-    """
-    c_eff = np.where(np.abs(v_rel) < v0, c_min, c_max)
-    return c_eff * v_rel
-
-
-# --------------- ODEs -----------------------
-
-def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_min, c_max, v0, k_t, v):
-    """
-    Quarter-car with nonlinear passive (piecewise) damper.
-    state = [x_s, x_s_dot, x_u, x_u_dot]
-    returns [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
-    """
-    x_s, x_s_dot, x_u, x_u_dot = state
-
-    # Road input
-    z_r = road_input(t, v)
-
-    # Relative quantities
-    x_su = x_s - x_u
-    v_rel = x_s_dot - x_u_dot
-
-    # Nonlinear passive damper force
-    F_d = F_passive_piecewise(v_rel, c_min, c_max, v0)
-
-    # Equations of motion
-    x_s_ddot = (-k_s * x_su - F_d) / m_s
-
-    x_ur = x_u - z_r
-    x_u_ddot = (k_s * x_su + F_d - k_t * x_ur) / m_u
-
-    return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
-
-
-def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v):
-    """
-    Quarter-car with semi-active clipped skyhook damper.
-    state = [x_s, x_s_dot, x_u, x_u_dot]
-    """
-    x_s, x_s_dot, x_u, x_u_dot = state
-
-    # Road input
-    z_r = road_input(t, v)
-
-    # Relative quantities
-    x_su = x_s - x_u
-    v_rel = x_s_dot - x_u_dot
-
-    # Clipped skyhook: use c_max when damping reduces body motion, else c_min
-    if x_s_dot * v_rel > 0:
-        c_eff = c_max
-    else:
-        c_eff = c_min
-    F_d = c_eff * v_rel
-
-    # Equations of motion
-    x_s_ddot = (-k_s * x_su - F_d) / m_s
-
-    x_ur = x_u - z_r
-    x_u_ddot = (k_s * x_su + F_d - k_t * x_ur) / m_u
-
-    return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
-
 
 # Passive simulation
 sol = solve_ivp(
