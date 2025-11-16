@@ -2,3 +2,4 @@ venv
 outputs/
 __pycache__/
 testing_methods/
+.DS_Store
