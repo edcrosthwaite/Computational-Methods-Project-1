@@ -3,20 +3,20 @@ Design utilities: natural frequencies and Newton–Raphson tuning of ks
 based on the coupled 2-DOF body mode.
 """
 import numpy as np
-from params import SuspensionParams
+from testing_methods.ODEparams import SuspensionODEParameters
 
 
-def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
+def body_mode_frequency(ks: float, params: SuspensionODEParameters) -> float:
     """
     Compute the lower (body) natural frequency [Hz] of the 2-DOF quarter-car
     for a given suspension stiffness ks.
     """
     # Mass and stiffness matrices
-    M = np.array([[params.ms, 0.0],
-                  [0.0, params.mu]])
+    M = np.array([[params.m_s, 0.0],
+                  [0.0, params.m_u]])
 
     K = np.array([[ ks, -ks],
-                  [-ks, ks + params.kt]])
+                  [-ks, ks + params.k_t]])
 
     # Generalised eigenproblem: M^{-1} K φ = λ φ, with λ = ω^2
     evals, _ = np.linalg.eig(np.linalg.inv(M) @ K)
@@ -29,7 +29,7 @@ def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
 
 
 def tune_ks_newton(
-    params: SuspensionParams,
+    params: SuspensionODEParameters,
     f_target: float,
     k0: float | None = None,
     tol: float = 1e-4,
@@ -67,10 +67,10 @@ def tune_ks_newton(
 
 
 if __name__ == "__main__":
-    p = SuspensionParams()
+    p = SuspensionODEParameters()
     f_target = 1.45  # target body mode frequency [Hz]
 
-    ks_tuned = tune_ks_newton(p, f_target, k0=p.ks)
+    ks_tuned = tune_ks_newton(p, f_target, k0=p.k_s)
     f_body_final = body_mode_frequency(ks_tuned, p)
 
     print(f"Initial ks guess: {p.ks:.1f} N/m")

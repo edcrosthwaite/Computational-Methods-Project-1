@@ -1,27 +1,24 @@
-import numpy as np  # arrays, maths etc
-from scipy.integrate import solve_ivp  # ODE solver
-import matplotlib.pyplot as plt  # plotting
-from constants import VELOCITY_THRESHOLD, T_START, T_END, T_EVAL, X_INITIAL_STATE
+# main.py
 
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+from constants import (
+    VELOCITY_THRESHOLD, T_START, T_END, T_EVAL, X_INITIAL_STATE
+)
+
+from ODEroad import road_input
 from ODEdampers import F_passive_piecewise
 from ODEodes import quarter_car_ode_passive, quarter_car_ode_skyhook
-from ODEroad import road_input
+from params import SuspensionParams
 
-# Parameters 
-m_s = 300.0      # sprung mass [kg]
-m_u = 40.0       # unsprung mass [kg]
-k_s = 28510.0    # suspension spring stiffness [N/m]
-k_t = 250000.0   # tyre stiffness [N/m]
+params = SuspensionParams()
 
-# Nonlinear passive / semi-active damper parameters
-c_min = 500.0    # low damping [Ns/m]
-c_max = 3000.0   # high damping [Ns/m]
-
-v = 5.0         # vehicle speed [m/s]
 
 # Passive simulation
 sol = solve_ivp(
-    fun=lambda t, y: quarter_car_ode_passive(t, y, m_s, m_u, k_s, c_min, c_max, VELOCITY_THRESHOLD, k_t, v),
+    fun=lambda t, y: quarter_car_ode_passive(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, VELOCITY_THRESHOLD, params.kt, params.v),
     t_span=(T_START, T_END),
     y0=X_INITIAL_STATE,
     t_eval=T_EVAL,
@@ -30,7 +27,7 @@ sol = solve_ivp(
 
 # Skyhook simulation
 sol_sky = solve_ivp(
-    fun=lambda t, y: quarter_car_ode_skyhook(t, y, m_s, m_u, k_s, c_min, c_max, k_t, v),
+    fun=lambda t, y: quarter_car_ode_skyhook(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, params.kt, params.v),
     t_span=(T_START, T_END),
     y0=X_INITIAL_STATE,
     t_eval=T_EVAL,
@@ -57,8 +54,8 @@ x_u_sky     = sol_sky.y[2, :]
 x_u_dot_sky = sol_sky.y[3, :]
 
 # Road profiles
-z_r_passive = np.array([road_input(ti, v) for ti in t])
-z_r_sky     = np.array([road_input(ti, v) for ti in t_sky])
+z_r_passive = np.array([road_input(ti, params.v) for ti in t])
+z_r_sky     = np.array([road_input(ti, params.v) for ti in t_sky])
 
 # Derived quantities
 
@@ -66,16 +63,16 @@ z_r_sky     = np.array([road_input(ti, v) for ti in t_sky])
 travel_passive = x_s - x_u
 tyre_passive   = x_u - z_r_passive
 v_rel_passive  = x_s_dot - x_u_dot
-F_d_passive    = F_passive_piecewise(v_rel_passive, c_min, c_max, VELOCITY_THRESHOLD)
-acc_passive    = (-k_s * (x_s - x_u) - F_d_passive) / m_s
+F_d_passive    = F_passive_piecewise(v_rel_passive, params.c_min, params.c_max, VELOCITY_THRESHOLD)
+acc_passive    = (-params.ks * (x_s - x_u) - F_d_passive) / params.ms
 
 # Skyhook
 travel_skyhook = x_s_sky - x_u_sky
 tyre_skyhook   = x_u_sky - z_r_sky
 vel_rel_sky    = x_s_dot_sky - x_u_dot_sky
-c_eff_sky      = np.where(x_s_dot_sky * vel_rel_sky > 0, c_max, c_min)
+c_eff_sky      = np.where(x_s_dot_sky * vel_rel_sky > 0, params.c_max, params.c_min)
 F_d_sky        = c_eff_sky * vel_rel_sky
-acc_skyhook    = (-k_s * (x_s_sky - x_u_sky) - F_d_sky) / m_s
+acc_skyhook    = (-params.ks * (x_s_sky - x_u_sky) - F_d_sky) / params.ms
 
 # Performance metrics 
 
@@ -124,7 +121,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# --- Plot displacements with road profile ---
+# --- Plot displacements with road profile (skyhook) ---
 plt.figure(figsize=(8,5))
 
 plt.subplot(2,1,1)

@@ -2,15 +2,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
-
-from ODE.ODEdampers import F_passive_piecewise
-from ODE.ODEparams import c_min, c_max, m_s, m_u, k_s, k_t  
 from fit_damper_advanced import compare_interpolation_methods
 from scipy.interpolate import CubicSpline, UnivariateSpline
 from scipy.integrate import solve_ivp
 
+from constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
 
+from ODEdampers import F_passive_piecewise
+from testing_methods.ODEparams import c_min, c_max, m_s, m_u, k_s, k_t  
 
 # Velocity range and resolution
 v_min = -1.20  # m/s

@@ -2,11 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
-from constants import (
+from src.constants import (
     T_START, T_END, T_EVAL, X_INITIAL_STATE
 )
 
-from ODEparams import (
+from testing_methods.ODEparams import (
     m_s, m_u, k_s, k_t,
     c_min, c_max, v
 )
