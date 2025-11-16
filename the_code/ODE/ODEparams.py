@@ -11,7 +11,7 @@ k_t = 250000.0   # tyre stiffness [N/m]
 # Nonlinear passive / semi-active damper parameters
 c_min = 500.0    # low damping [Ns/m]
 c_max = 3000.0   # high damping [Ns/m]
-v0    = 0.05     # velocity threshold [m/s] for piecewise passive (where damper transitions from soft to firm behaviour)
+v0    = 0.3     # velocity threshold [m/s] for piecewise passive (where damper transitions from soft to firm behaviour)
 
 v = 5.0          # vehicle speed [m/s]
 
