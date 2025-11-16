@@ -11,7 +11,7 @@ c_s = 1500.0  # suspension damping [Ns/m]
 c_comp = 10000.0  # damper compression damping [Ns/m]
 c_reb = 1500.0   # damper rebound damping [Ns/m]
 
-v = 10.0  # vehicle speed [m/s]
+v = 5.0  # vehicle speed [m/s]
 
 # Road input: half-sine bump
 def road_input(t, v, h=0.05, L=1.0):
