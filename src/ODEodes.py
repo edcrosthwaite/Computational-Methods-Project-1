@@ -1,7 +1,7 @@
 # odes.py
 # the two ODE functions for quarter-car suspension model
-from ODEroad import road_input
-from ODEdampers import F_passive_piecewise
+from src.ODEroad import road_input
+from src.ODEdampers import F_passive_piecewise
 
 # --------------- ODEs -----------------------
 
