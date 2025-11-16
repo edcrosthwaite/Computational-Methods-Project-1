@@ -2,10 +2,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from ODEdampers import F_passive_piecewise
-from ODEparams import c_min, c_max, v0
+from constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
+
+from ODE.ODEdampers import F_passive_piecewise
+from ODE.ODEparams import c_min, c_max, m_s, m_u, k_s, k_t  
 from fit_damper_advanced import compare_interpolation_methods
 from scipy.interpolate import CubicSpline, UnivariateSpline
+from scipy.integrate import solve_ivp
+
+
 
 # Velocity range and resolution
 v_min = -1.20  # m/s
@@ -16,7 +21,7 @@ n_points = 61 # gives 0.04 m/s spacing
 v_data = np.linspace(v_min, v_max, n_points)
 
 # Corresponding damper forces from piecewise law (no noise)
-F_data = F_passive_piecewise(v_data, c_min, c_max, v0)
+F_data = F_passive_piecewise(v_data, c_min, c_max, VELOCITY_THRESHOLD)
 
 print("Synthetic F–v dataset created.")
 print("v_data range: ", v_data.min(), "to", v_data.max(), "[m/s]")
@@ -64,11 +69,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# Using spline damper inside quarter-car ODE
-from scipy.integrate import solve_ivp
-from ODEparams import m_s, m_u, k_s, k_t, t_start 
-
-v = 5.0  # m/s road bump speed
+v = 5.0 # m/s
 
 def road_input(t, v, h=0.05, L=1.0):
     """
@@ -99,18 +100,12 @@ def quarter_car_ode_passive_spline(t, state, m_s, m_u, k_s, k_t, v, F_d_model):
 
     return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
 
-# Simulation settings
-t_start = 0.0
-t_end   = 3.0
-t_eval  = np.linspace(t_start, t_end, 2000)
-x0      = [0.0, 0.0, 0.0, 0.0]   # [x_s, x_s_dot, x_u, x_u_dot]
-
 # Solve with spline-based damper
 sol_spline = solve_ivp(
     fun=lambda t, y: quarter_car_ode_passive_spline(t, y, m_s, m_u, k_s, k_t, v, F_d_spline_smooth),
-    t_span=(t_start, t_end),
-    y0=x0,
-    t_eval=t_eval,
+    t_span=(T_START, T_END),
+    y0=X_INITIAL_STATE,
+    t_eval=T_EVAL,
     method='RK45'
 )
 

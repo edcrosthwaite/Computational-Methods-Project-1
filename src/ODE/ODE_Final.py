@@ -1,6 +1,7 @@
 import numpy as np  # arrays, maths etc
 from scipy.integrate import solve_ivp  # ODE solver
 import matplotlib.pyplot as plt  # plotting
+from constants import VELOCITY_THRESHOLD, T_START, T_END, T_EVAL, X_INITIAL_STATE
 
 # Parameters 
 m_s = 300.0      # sprung mass [kg]
@@ -11,7 +12,6 @@ k_t = 250000.0   # tyre stiffness [N/m]
 # Nonlinear passive / semi-active damper parameters
 c_min = 500.0    # low damping [Ns/m]
 c_max = 3000.0   # high damping [Ns/m]
-v0    = 0.05     # velocity threshold [m/s] for piecewise passive (where damper transitions from soft to firm behaviour)
 
 v = 5.0         # vehicle speed [m/s]
 
@@ -99,30 +99,21 @@ def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v):
     return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
 
 
-# Simulation settings
-
-t_start = 0.0
-t_end = 3.0
-t_eval = np.linspace(t_start, t_end, 2000)
-
-# Initial state: [x_s, x_s_dot, x_u, x_u_dot]
-x0 = [0.0, 0.0, 0.0, 0.0]
-
 # Passive simulation
 sol = solve_ivp(
-    fun=lambda t, y: quarter_car_ode_passive(t, y, m_s, m_u, k_s, c_min, c_max, v0, k_t, v),
-    t_span=(t_start, t_end),
-    y0=x0,
-    t_eval=t_eval,
+    fun=lambda t, y: quarter_car_ode_passive(t, y, m_s, m_u, k_s, c_min, c_max, VELOCITY_THRESHOLD, k_t, v),
+    t_span=(T_START, T_END),
+    y0=X_INITIAL_STATE,
+    t_eval=T_EVAL,
     method='RK45'
 )
 
 # Skyhook simulation
 sol_sky = solve_ivp(
     fun=lambda t, y: quarter_car_ode_skyhook(t, y, m_s, m_u, k_s, c_min, c_max, k_t, v),
-    t_span=(t_start, t_end),
-    y0=x0,
-    t_eval=t_eval,
+    t_span=(T_START, T_END),
+    y0=X_INITIAL_STATE,
+    t_eval=T_EVAL,
     method='RK45'
 )
 
@@ -155,7 +146,7 @@ z_r_sky     = np.array([road_input(ti, v) for ti in t_sky])
 travel_passive = x_s - x_u
 tyre_passive   = x_u - z_r_passive
 v_rel_passive  = x_s_dot - x_u_dot
-F_d_passive    = F_passive_piecewise(v_rel_passive, c_min, c_max, v0)
+F_d_passive    = F_passive_piecewise(v_rel_passive, c_min, c_max, VELOCITY_THRESHOLD)
 acc_passive    = (-k_s * (x_s - x_u) - F_d_passive) / m_s
 
 # Skyhook

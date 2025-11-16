@@ -2,7 +2,6 @@
 Design utilities: natural frequencies and Newton–Raphson tuning of ks
 based on the coupled 2-DOF body mode.
 """
-import os
 import numpy as np
 from params import SuspensionParams
 
@@ -14,10 +13,10 @@ def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
     """
     # Mass and stiffness matrices
     M = np.array([[params.ms, 0.0],
-                  [0.0,        params.mu]])
+                  [0.0, params.mu]])
 
-    K = np.array([[ ks,        -ks],
-                  [-ks,  ks + params.kt]])
+    K = np.array([[ ks, -ks],
+                  [-ks, ks + params.kt]])
 
     # Generalised eigenproblem: M^{-1} K φ = λ φ, with λ = ω^2
     evals, _ = np.linalg.eig(np.linalg.inv(M) @ K)

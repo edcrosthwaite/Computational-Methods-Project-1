@@ -4,10 +4,13 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
+from constants import (
+    VELOCITY_THRESHOLD, T_START, T_END, T_EVAL, X_INITIAL_STATE
+)
+
 from ODEparams import (
     m_s, m_u, k_s, k_t,
-    c_min, c_max, v0,
-    v, t_start, t_end, t_eval, x0
+    c_min, c_max, v 
 )
 from ODEroad import road_input
 from ODEdampers import F_passive_piecewise
@@ -15,19 +18,19 @@ from ODEodes import quarter_car_ode_passive, quarter_car_ode_skyhook
 
 # Passive simulation
 sol = solve_ivp(
-    fun=lambda t, y: quarter_car_ode_passive(t, y, m_s, m_u, k_s, c_min, c_max, v0, k_t, v),
-    t_span=(t_start, t_end),
-    y0=x0,
-    t_eval=t_eval,
+    fun=lambda t, y: quarter_car_ode_passive(t, y, m_s, m_u, k_s, c_min, c_max, VELOCITY_THRESHOLD, k_t, v),
+    t_span=(T_START, T_END),
+    y0=X_INITIAL_STATE,
+    t_eval=T_EVAL,
     method='RK45'
 )
 
 # Skyhook simulation
 sol_sky = solve_ivp(
     fun=lambda t, y: quarter_car_ode_skyhook(t, y, m_s, m_u, k_s, c_min, c_max, k_t, v),
-    t_span=(t_start, t_end),
-    y0=x0,
-    t_eval=t_eval,
+    t_span=(T_START, T_END),
+    y0=X_INITIAL_STATE,
+    t_eval=T_EVAL,
     method='RK45'
 )
 
@@ -60,7 +63,7 @@ z_r_sky     = np.array([road_input(ti, v) for ti in t_sky])
 travel_passive = x_s - x_u
 tyre_passive   = x_u - z_r_passive
 v_rel_passive  = x_s_dot - x_u_dot
-F_d_passive    = F_passive_piecewise(v_rel_passive, c_min, c_max, v0)
+F_d_passive    = F_passive_piecewise(v_rel_passive, c_min, c_max, VELOCITY_THRESHOLD)
 acc_passive    = (-k_s * (x_s - x_u) - F_d_passive) / m_s
 
 # Skyhook

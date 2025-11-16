@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
+from constants import (
+    T_START, T_END, T_EVAL, X_INITIAL_STATE
+)
+
 from ODEparams import (
     m_s, m_u, k_s, k_t,
     c_min, c_max, v
@@ -38,18 +42,12 @@ def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v):
 
     return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
 
-# Running a skyhook simulation
-
-t_start = 0.0
-t_end   = 3.0
-t_eval  = np.linspace(t_start, t_end, 2000)
-x0      = [0.0, 0.0, 0.0, 0.0]
 
 sol_sky = solve_ivp(
     fun=lambda t, y: quarter_car_ode_skyhook(t, y, m_s, m_u, k_s, c_min, c_max, k_t, v),
-    t_span=(t_start, t_end),
-    y0=x0,
-    t_eval=t_eval,
+    t_span=(T_START, T_END),
+    y0=X_INITIAL_STATE,
+    t_eval=T_EVAL,
     method='RK45'
 )
 
@@ -85,7 +83,6 @@ mask_soft = c_eff_sky == c_min
 mask_firm = c_eff_sky == c_max
 
 # Adding noise to simulate experimental data
-
 rng = np.random.default_rng(42)
 noise_level = 0.05  # 5% noise relative to peak force
 
@@ -96,10 +93,6 @@ F_soft = F_sky_noisy[mask_soft]
 F_firm = F_sky_noisy[mask_firm]
 v_soft = v_sky[mask_soft]
 v_firm = v_sky[mask_firm]
-
-
-v_soft, F_soft = v_sky[mask_soft], F_sky[mask_soft]
-v_firm, F_firm = v_sky[mask_firm], F_sky[mask_firm]
 
 print(f"Soft samples: {v_soft.size}, Firm samples: {v_firm.size}")
 
@@ -130,7 +123,7 @@ plt.plot(v_line, a_firm*v_line + b_firm, 'r--', linewidth=2, label=f'Firm fit ({
 
 plt.xlabel('Relative velocity v_rel [m/s]')
 plt.ylabel('Damper force F_d [N]')
-plt.title('Semi-active skyhook damper: F–v characteristics')
+plt.title('Semi-active skyhook damper: F–v characteristics (with noise)')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
