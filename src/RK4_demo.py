@@ -9,7 +9,7 @@ k_t = 250000.0 # tyre stiffness [N/m]
 c_s = 1500.0   # damping [Ns/m]
 v = 5.0       # vehicle speed [m/s]
 
-# --- Road input (cosine bump) ---
+# --- Road input (cosine bump) --- change clash royale
 def road_input(t, v, h=0.05, L=1.0):
     x = v * t
     if 0 <= x <= L:

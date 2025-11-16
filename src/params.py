@@ -16,6 +16,8 @@ class SuspensionParams:
     ks: float = 15000.0   # suspension spring stiffness [N/m] (20 kN/m)
     kt: float = 200_000.0  # tyre stiffness [N/m] (190 kN/m)
 
+    v: float = 5.0  # vehicle speed [m/s]
+
     # Passive damper asymmetry (compression vs rebound)
     c_comp: float = 1000.0   # Ns/m (compression)
     c_reb: float = 1500.0    # Ns/m (rebound)

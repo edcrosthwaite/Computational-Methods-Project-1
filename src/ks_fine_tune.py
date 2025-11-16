@@ -2,10 +2,8 @@
 Design utilities: natural frequencies and Newton–Raphson tuning of ks
 based on the coupled 2-DOF body mode.
 """
-import os
 import numpy as np
-from params import SuspensionParams
-
+from src.params import SuspensionParams
 
 def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
     """
@@ -14,10 +12,10 @@ def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
     """
     # Mass and stiffness matrices
     M = np.array([[params.ms, 0.0],
-                  [0.0,        params.mu]])
+                  [0.0, params.mu]])
 
-    K = np.array([[ ks,        -ks],
-                  [-ks,  ks + params.kt]])
+    K = np.array([[ ks, -ks],
+                  [-ks, ks + params.kt]])
 
     # Generalised eigenproblem: M^{-1} K φ = λ φ, with λ = ω^2
     evals, _ = np.linalg.eig(np.linalg.inv(M) @ K)
@@ -67,13 +65,27 @@ def tune_ks_newton(
     return k  # return last iterate even if not fully converged
 
 
-if __name__ == "__main__":
-    p = SuspensionParams()
-    f_target = 1.45  # target body mode frequency [Hz]
+def root_finding_entry(p: SuspensionParams, f_target: float) -> tuple[float, float]:
 
     ks_tuned = tune_ks_newton(p, f_target, k0=p.ks)
     f_body_final = body_mode_frequency(ks_tuned, p)
 
-    print(f"Initial ks guess: {p.ks:.1f} N/m")
-    print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")
-    print(f"Resulting body mode frequency: {f_body_final:.4f} Hz")
+    return ks_tuned, f_body_final
+    
+def ks_rootfinding():
+    p = SuspensionParams()
+
+    f_target_list = [1.3, 1.45, 1.6]  # Hz
+    results = {}
+    for f_target in f_target_list:
+        ks_tuned, f_body_final = root_finding_entry(p, f_target)
+        results[f_target] = (ks_tuned, f_body_final)
+
+        print(f"----------------------------------------")
+        print(f"\nFor target frequency {f_target:.3f} Hz:\n")
+        print(f"Initial ks guess: {p.ks:.1f} N/m")
+        print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")
+        print(f"Resulting body mode frequency: {f_body_final:.4f} Hz")
+        
+if __name__ == "__main__":
+    ks_rootfinding()
