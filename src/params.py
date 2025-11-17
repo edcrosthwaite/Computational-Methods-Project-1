@@ -1,4 +1,3 @@
-
 """
 Parameter definitions for the quarter-car suspension model.
 All units SI unless stated otherwise.
@@ -15,6 +14,8 @@ class SuspensionParams:
     # Stiffness (initial guesses; ks may be updated by root finding)
     ks: float = 15000.0   # suspension spring stiffness [N/m] (20 kN/m)
     kt: float = 250000.0  # tyre stiffness [N/m] (190 kN/m)
+
+    v: float = 5.0  # vehicle speed [m/s]
 
     v: float = 5.0  # vehicle speed [m/s]
 

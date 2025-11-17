@@ -8,8 +8,24 @@ from scipy.integrate import solve_ivp
 
 from constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
 
+<<<<<<< HEAD
 from ODEdampers import F_passive_piecewise
 from testing_methods.ODEparams import c_min, c_max, m_s, m_u, k_s, k_t  
+=======
+from ODEroad import road_input
+
+from ODEdampers import F_passive_piecewise
+from src.params import SuspensionParams as pr
+
+c_min = pr.c_min
+c_max = pr.c_max
+v = pr.v
+m_u = pr.mu
+m_s = pr.ms
+k_s = pr.ks
+k_t = pr.kt
+
+>>>>>>> 93c9ec3730f1401076434c3e3c800af3ed8e1bdc
 
 # Velocity range and resolution
 v_min = -1.20  # m/s
@@ -45,10 +61,8 @@ for method, metrics in results.items():
 '''
 # Building cubic-spline fitted damper model for use in simulations
 
-'''
 # Fitting spline to noisy 'measured' data
-F_d_spline = CubicSpline(v_data, F_noisy, extrapolate=True)
-'''
+#F_d_spline = CubicSpline(v_data, F_noisy, extrapolate=True)
 
 # Potential smoothing fix...
 F_d_spline_smooth = UnivariateSpline(v_data, F_noisy, s=0.02 * len(v_data))
@@ -68,6 +82,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
+<<<<<<< HEAD
 v = 5.0 # m/s
 
 def road_input(t, v, h=0.05, L=1.0):
@@ -79,6 +94,8 @@ def road_input(t, v, h=0.05, L=1.0):
         return 0.5 * h * (1 - np.cos(2 * np.pi * x / L))
     return 0.0
 
+=======
+>>>>>>> 93c9ec3730f1401076434c3e3c800af3ed8e1bdc
 def quarter_car_ode_passive_spline(t, state, m_s, m_u, k_s, k_t, v, F_d_model):
     """
     Quarter-car with damper force from fitted F_d_model(v_rel).
@@ -131,4 +148,3 @@ print("\n=== PASSIVE (spline-fitted damper in ODE) ===")
 print(f"Max travel:        {max_travel_spl*1000:.2f} mm")
 print(f"Max tyre defl:     {max_tyre_spl*1000:.2f} mm")
 print(f"RMS acceleration:  {rms_acc_spl:.3f} m/s^2")
-
