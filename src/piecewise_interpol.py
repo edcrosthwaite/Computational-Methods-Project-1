@@ -131,4 +131,3 @@ print("\n=== PASSIVE (spline-fitted damper in ODE) ===")
 print(f"Max travel:        {max_travel_spl*1000:.2f} mm")
 print(f"Max tyre defl:     {max_tyre_spl*1000:.2f} mm")
 print(f"RMS acceleration:  {rms_acc_spl:.3f} m/s^2")
-

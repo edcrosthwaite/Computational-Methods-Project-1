@@ -1,3 +1,4 @@
+"""Plots results"""
 import matplotlib.pyplot as plt
 
 def plot(data, y=(0,0), x=(2, 0)):
