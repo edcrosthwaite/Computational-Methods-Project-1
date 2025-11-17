@@ -1,4 +1,3 @@
-
 """
 Parameter definitions for the quarter-car suspension model.
 All units SI unless stated otherwise.
