@@ -87,7 +87,7 @@ def ode():
     rms_acc_skyhook    = np.sqrt(np.mean(acc_skyhook**2))
 
     # --------------- Print results --------------
-'''
+
     print("=== PASSIVE (piecewise nonlinear) ===")
     print(f"Max travel:        {max_travel_passive*1000:.2f} mm")
     print(f"Max tyre defl:     {max_tyre_passive*1000:.2f} mm")
@@ -143,6 +143,6 @@ def ode():
 
     plt.tight_layout()
     plt.show()
-'''   
+
 if __name__ == "__main__":
     ode()
