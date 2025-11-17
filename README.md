@@ -22,11 +22,20 @@ CMM3_Suspension_Project/
 └── signals.py          # Road input generators (half-sine bump, sine sweep)
 ```
 
-## How to Run
 
-1. Ensure a Python 3 environment with `matplotlib` and `numpy` available.
-2. Run:
 
+### Setup for virtual environment
+- Create virtual environment
+- Activate virtual environment
+- Install python packages to virtual environment
+
+```python
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### How to Run
 ```bash
 python main.py
 ```

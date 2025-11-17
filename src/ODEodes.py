@@ -1,11 +1,11 @@
 # odes.py
 # the two ODE functions for quarter-car suspension model
-from ODEroad import road_input
-from ODEdampers import F_passive_piecewise
+from src.ODEroad import road_input
+from src.ODEdampers import F_passive_piecewise
 
 # --------------- ODEs -----------------------
 
-def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_min, c_max, v0, k_t, v):
+def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_comp_low, c_comp_high, c_reb_low, c_reb_high, v0, k_t, v):
     """
     Quarter-car with nonlinear passive (piecewise) damper.
     state = [x_s, x_s_dot, x_u, x_u_dot]
@@ -21,7 +21,7 @@ def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_min, c_max, v0, k_t, v):
     v_rel = x_s_dot - x_u_dot
 
     # Nonlinear passive damper force
-    F_d = F_passive_piecewise(v_rel, c_min, c_max, v0)
+    F_d = F_passive_piecewise(v_rel, c_comp_low, c_comp_high, c_reb_low, c_reb_high, v0)
 
     # Equations of motion
     x_s_ddot = (-k_s * x_su - F_d) / m_s
