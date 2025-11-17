@@ -4,10 +4,7 @@ based on the coupled 2-DOF body mode.
 """
 import numpy as np
 from src.params import SuspensionParams
-<<<<<<< HEAD
-=======
 import src.constants
->>>>>>> 93c9ec3730f1401076434c3e3c800af3ed8e1bdc
 
 def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
     """
@@ -73,12 +70,7 @@ def root_finding_entry(p: SuspensionParams, f_target: float) -> tuple[float, flo
     f_body_final = body_mode_frequency(ks_tuned, p)
 
     return ks_tuned, f_body_final
-<<<<<<< HEAD
     
-=======
-
-
->>>>>>> 93c9ec3730f1401076434c3e3c800af3ed8e1bdc
 def ks_rootfinding():
     p = SuspensionParams()
 
@@ -88,19 +80,11 @@ def ks_rootfinding():
         ks_tuned, f_body_final = root_finding_entry(p, f_target)
         results[f_target] = (ks_tuned, f_body_final)
 
-<<<<<<< HEAD
         print(f"----------------------------------------")
-=======
-        print("----------------------------------------")
->>>>>>> 93c9ec3730f1401076434c3e3c800af3ed8e1bdc
         print(f"\nFor target frequency {f_target:.3f} Hz:\n")
         print(f"Initial ks guess: {p.ks:.1f} N/m")
         print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")
         print(f"Resulting body mode frequency: {f_body_final:.4f} Hz")
-<<<<<<< HEAD
         
-=======
-
->>>>>>> 93c9ec3730f1401076434c3e3c800af3ed8e1bdc
 if __name__ == "__main__":
     ks_rootfinding()

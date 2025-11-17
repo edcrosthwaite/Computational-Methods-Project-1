@@ -11,4 +11,4 @@ X_INITIAL_STATE = [0.0, 0.0, 0.0, 0.0]
 
 VELOCITY_THRESHOLD = 0.1     # velocity threshold [m/s] for piecewise passive (where damper transitions from soft to firm behaviour)
 
-K_S_GUESS = 20000.0  # initial guess for suspension stiffness [N/m] in ks tuning
+K_INITIAL_GUESS = 20000.0  # initial guess for suspension stiffness [N/m] in ks tuning
