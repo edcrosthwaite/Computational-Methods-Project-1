@@ -63,7 +63,7 @@ def tune_ks_newton(
 
     return k  # return last iterate even if not fully converged
 
-
+# Function etc
 def root_finding_entry(p: SuspensionParams, f_target: float) -> tuple[float, float]:
 
     ks_tuned = tune_ks_newton(p, f_target, k0=p.ks)
