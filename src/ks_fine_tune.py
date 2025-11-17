@@ -4,6 +4,7 @@ based on the coupled 2-DOF body mode.
 """
 import numpy as np
 from src.params import SuspensionParams
+import src.constants
 
 def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
     """
@@ -30,7 +31,7 @@ def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
 def tune_ks_newton(
     params: SuspensionParams,
     f_target: float,
-    k0: float | None = None,
+    k0: float = src.constants.K_INITIAL_GUESS,
     tol: float = 1e-4,
     max_iter: int = 20,
     dk: float = 100.0,
@@ -40,8 +41,6 @@ def tune_ks_newton(
     matches f_target. Derivative dF/dks is approximated by finite difference.
     F(ks) = f_body(ks) - f_target.
     """
-    if k0 is None:
-        k0 = params.ks  # start from current guess
 
     k = k0
     for _ in range(max_iter):
@@ -71,7 +70,8 @@ def root_finding_entry(p: SuspensionParams, f_target: float) -> tuple[float, flo
     f_body_final = body_mode_frequency(ks_tuned, p)
 
     return ks_tuned, f_body_final
-    
+
+
 def ks_rootfinding():
     p = SuspensionParams()
 
@@ -81,11 +81,11 @@ def ks_rootfinding():
         ks_tuned, f_body_final = root_finding_entry(p, f_target)
         results[f_target] = (ks_tuned, f_body_final)
 
-        print(f"----------------------------------------")
+        print("----------------------------------------")
         print(f"\nFor target frequency {f_target:.3f} Hz:\n")
         print(f"Initial ks guess: {p.ks:.1f} N/m")
         print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")
         print(f"Resulting body mode frequency: {f_body_final:.4f} Hz")
-        
+
 if __name__ == "__main__":
     ks_rootfinding()
