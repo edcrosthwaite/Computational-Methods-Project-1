@@ -13,8 +13,10 @@ from ODEroad import road_input
 from ODEdampers import F_passive_piecewise
 from src.params import SuspensionParams as pr
 
-c_min = pr.c_min
-c_max = pr.c_max
+c_comp_low  = pr.c_comp_low
+c_comp_high = pr.c_comp_high
+c_reb_low   = pr.c_reb_low
+c_reb_high  = pr.c_reb_high
 v = pr.v
 m_u = pr.mu
 m_s = pr.ms
@@ -30,7 +32,14 @@ n_points = 61 # gives 0.04 m/s spacing
 v_data = np.linspace(v_min, v_max, n_points)
 
 # Corresponding damper forces from piecewise law (no noise)
-F_data = F_passive_piecewise(v_data, c_min, c_max, VELOCITY_THRESHOLD)
+F_data = F_passive_piecewise(
+    v_data, 
+    c_comp_low, 
+    c_comp_high, 
+    c_reb_low, 
+    c_reb_high, 
+    VELOCITY_THRESHOLD
+)
 
 print("Synthetic F–v dataset created.")
 print("v_data range: ", v_data.min(), "to", v_data.max(), "[m/s]")
