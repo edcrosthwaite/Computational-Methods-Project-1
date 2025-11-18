@@ -11,7 +11,7 @@ from constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STA
 from ODEroad import road_input
 
 from ODEdampers import F_passive_piecewise
-from src.params import SuspensionParams as pr
+from params import SuspensionParams as pr
 
 c_comp_low  = pr.c_comp_low
 c_comp_high = pr.c_comp_high
@@ -54,14 +54,14 @@ F_noisy = F_data + noise_level * np.max(np.abs(F_data)) * rng.standard_normal(si
 # Comparing interpolation/regression methods
 # ---------- Step 4: compare interpolation / regression methods ----------
 results = compare_interpolation_methods(v_data, F_noisy)
-'''
+
 print("\n=== Regression / Interpolation Comparison ===")
 for method, metrics in results.items():
     if "error" in metrics:
         print(f"{method:20s} -> ERROR: {metrics['error']}")
     else:
         print(f"{method:20s} -> RMSE = {metrics['rmse']:.2f} N,  Smoothness = {metrics['smoothness']:.3f}")
-'''
+
 # Building cubic-spline fitted damper model for use in simulations
 
 # Fitting spline to noisy 'measured' data
