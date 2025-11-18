@@ -7,8 +7,8 @@ Each function defines the time derivative of the state vector (velocity and
 acceleration) for a specific damper configuration.
 """
 import numpy as np
-from src.ODEroad import road_input
-from src.ODEdampers import F_passive_piecewise, F_skyhook_clipped
+from ODEroad import road_input
+from ODEdampers import F_passive_piecewise, F_skyhook_clipped
 
 # --------------- ODEs -----------------------
 
