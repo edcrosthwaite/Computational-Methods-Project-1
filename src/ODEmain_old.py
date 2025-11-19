@@ -189,6 +189,7 @@ def ode_bump():
     plt.grid(True)
     
     plt.tight_layout()
+    plt.savefig('output/comparison_passive_skyhook_bump.png', dpi=300)
     plt.show()
 
 if __name__ == "__main__":

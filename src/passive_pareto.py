@@ -206,6 +206,7 @@ def passive_suspension_pareto():
         cbar.set_label("passive damping scale g")
         plt.legend()
         plt.tight_layout()
+        plt.savefig('output/pareto_passive_objective_space.png', dpi=300)
         plt.show()
 
         # ------------------------------------------------------------------
@@ -219,6 +220,7 @@ def passive_suspension_pareto():
         plt.ylabel("metric value [SI units]")
         plt.legend()
         plt.tight_layout()
+        plt.savefig('output/pareto_passive_design_space.png', dpi=300)
         plt.show()
 
 

@@ -189,6 +189,7 @@ def ode_iso():
     plt.grid(True)
     
     plt.tight_layout()
+    plt.savefig('output/comparison_passive_skyhook_iso_road.png', dpi=300)
     plt.show()
 
 if __name__ == "__main__":
