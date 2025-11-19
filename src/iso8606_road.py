@@ -63,7 +63,7 @@ def generate_iso8608_profile(
     z -= np.mean(z)
 
     # SCALE FACTOR
-    SCALE = 10  # adjust overall roughness level
+    SCALE = 50  # Scale factor of 50 to emulate an intensely rough road
     z *= SCALE
 
     return x, z
