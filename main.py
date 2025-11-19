@@ -1,4 +1,4 @@
-from src.ODEmain import ode_bump
+from ODEmain_old import ode_bump
 from src.ks_fine_tune import ks_rootfinding
 from src.ODEmain_iso import ode_iso
 from src.passive_pareto import passive_suspension_pareto
