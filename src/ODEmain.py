@@ -155,7 +155,7 @@ def ode_bump():
     # 6. PLOTTING (Visualization)
     # ----------------------------------------------------------------------
     
-    # NOTE: The original plotting code (showing displacements for passive then skyhook) 
+    # NOTE: The original plotting code (showing displacements for passive then skyhook)
     # has been replaced by the consolidated comparison plot below for better analysis.
 
     # --- Consolidated Comparison Plot ---
