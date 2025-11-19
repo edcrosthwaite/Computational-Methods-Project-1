@@ -123,14 +123,19 @@ def root_finding_entry(p: SuspensionParams, f_target: float) -> tuple[float, flo
 
     return ks_tuned, f_body_final
     
-def ks_rootfinding():
+def ks_rootfinding(f = None):
     """
     Main execution function to demonstrate stiffness tuning for a list of target frequencies.
     """
     p = SuspensionParams()
 
-    # List of target body natural frequencies (Hz) for the design study
-    f_target_list = [1.3, 1.45, 1.6]
+    if f is None:
+        # List of target body natural frequencies (Hz) for the design study
+        f_target_list = [1.3, 1.45, 1.6]
+
+    else:
+        f_target_list = [f]
+
     results = {}
     for f_target in f_target_list:
         ks_tuned, f_body_final = root_finding_entry(p, f_target)
@@ -141,6 +146,7 @@ def ks_rootfinding():
         print(f"Initial ks guess: {K_INITIAL_GUESS:.1f} N/m")
         print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")
         print(f"Resulting body mode frequency: {f_body_final:.4f} Hz")
-        
+    return results
+
 if __name__ == "__main__":
     ks_rootfinding()

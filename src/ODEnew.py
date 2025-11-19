@@ -25,7 +25,7 @@ from src.params import SuspensionParams # Vehicle mass and stiffness parameters
 # Initialise vehicle parameters instance
 params = SuspensionParams()
 
-def ode_bump(test_type: str = "bump"):
+def ode(test_type: str = "bump"):
     """
     Runs the numerical simulation for both damper configurations, calculates 
     performance metrics, and plots the comparative results.
@@ -221,4 +221,4 @@ def ode_bump(test_type: str = "bump"):
     plt.show()
 
 if __name__ == "__main__":
-    ode_bump()
+    ode()
