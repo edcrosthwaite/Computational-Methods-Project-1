@@ -210,6 +210,7 @@ def skyhook_suspension_pareto():
         cbar.set_label("skyhook damping scale g")
         plt.legend()
         plt.tight_layout()
+        plt.savefig('output/pareto_skyhook_objective_space.png', dpi=300)
         plt.show()
 
         # ------------------------------------------------------------------
@@ -223,6 +224,7 @@ def skyhook_suspension_pareto():
         plt.ylabel("metric value [SI units]")
         plt.legend()
         plt.tight_layout()
+        plt.savefig('output/pareto_skyhook_design_space.png', dpi=300)
         plt.show()
 
 
