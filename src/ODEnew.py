@@ -12,7 +12,9 @@ from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
 # Import constants (like time limits, initial state) and vehicle parameters
-from src.constants import *
+from src.constants import (
+    VELOCITY_THRESHOLD, T_START, T_END_ISO, T_EVAL_ISO, T_END_BUMP, T_EVAL_BUMP, X_INITIAL_STATE
+)
 
 # Import model components
 from src.ODEroad import road_input, road_iso # Road excitation profile
@@ -52,6 +54,9 @@ def ode_bump(test_type: str = "bump"):
             method='RK45'            # Runge-Kutta 4(5) is a robust integration method
         )
 
+        X0 = X_INITIAL_STATE
+        X0[0] = z0   # sprung mass displacement = road height
+        X0[2] = z0   # unsprung mass displacement = road height
     # --- Skyhook simulation (Clipped Skyhook Semi-Active Damper) ---
         sol_sky = solve_ivp(
             fun=lambda t, y: quarter_car_ode_skyhook(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, params.kt, params.v, z_r=road_iso(t, params.v)),
@@ -69,16 +74,16 @@ def ode_bump(test_type: str = "bump"):
         y0=X_INITIAL_STATE,      # Initial state vector [x_s, x_s_dot, x_u, x_u_dot]
         t_eval=T_EVAL_BUMP,           # Specific time points at which to store the solution
         method='RK45'            # Runge-Kutta 4(5) is a robust integration method
-    )
+        )
 
-    # --- Skyhook simulation (Clipped Skyhook Semi-Active Damper) ---
-    sol_sky = solve_ivp(
-        fun=lambda t, y: quarter_car_ode_skyhook(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, params.kt, params.v, z_r=road_input(t, params.v)),
-        t_span=(T_START, T_END_BUMP),
-        y0=X_INITIAL_STATE,
-        t_eval=T_EVAL_BUMP,
-        method='RK45'
-    )
+        # --- Skyhook simulation (Clipped Skyhook Semi-Active Damper) ---
+        sol_sky = solve_ivp(
+            fun=lambda t, y: quarter_car_ode_skyhook(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, params.kt, params.v, z_r=road_input(t, params.v)),
+            t_span=(T_START, T_END_BUMP),
+            y0=X_INITIAL_STATE,
+            t_eval=T_EVAL_BUMP,
+            method='RK45'
+        )
 
 
     # Report solver status to ensure successful integration
