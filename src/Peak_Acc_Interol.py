@@ -49,3 +49,5 @@ def inter():
     plt.grid()
     plt.legend()
     plt.show()
+
+    print("Reached end of interpolation\n")
