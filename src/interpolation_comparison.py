@@ -6,9 +6,9 @@ Uses interpolation to present how peak acceleration varies with velocity for eac
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
-from ODEinterpol import ode_bump
+from src.ODEinterpol import ode_bump
 
-def inter():
+def interpolation_comparison():
     """
     Runs ODEs N times and measures the peak acceleration while varying velocity.
     Then plots acceleration and interpolates between points.
@@ -49,3 +49,6 @@ def inter():
     plt.grid()
     plt.legend()
     plt.show()
+
+if __name__ == "__main__":
+    interpolation_comparison()
