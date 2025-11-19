@@ -23,14 +23,17 @@ from scipy.integrate import solve_ivp
 
 # --- Imports from project modules ---
 
+# Importing road function for skyhook interpolation
+from src.ODEroad import road_input
+
 # Core simulation settings (T_START, T_END, T_EVAL, X_INITIAL_STATE)
-from constants import (T_START, T_END, T_EVAL, X_INITIAL_STATE)
+from src.constants import (T_START, T_END, T_EVAL, X_INITIAL_STATE)
 
 # Suspension parameters (masses, stiffness, damping bounds)
-from params import SuspensionParams 
+from src.params import SuspensionParams 
 
 # The Skyhook ODE function (defines the system dynamics)
-from ODEodes import quarter_car_ode_skyhook
+from src.ODEodes import quarter_car_ode_skyhook
 
 # (HIGH MODULARITY NOTE): To avoid duplicating the control logic (np.where) 
 # in Step 2, the 'get_c_eff' helper function should be imported from ODEdampers.py:
@@ -50,7 +53,7 @@ def skyhook_interpolation():
         fun=lambda t, y: quarter_car_ode_skyhook(t, y, 
                                                 params.ms, params.mu, params.ks, 
                                                 params.c_min, params.c_max, params.kt, 
-                                                params.v),
+                                                params.v, z_r=road_input(t, params.v)),
         t_span=(T_START, T_END),        # Time span for integration
         y0=X_INITIAL_STATE,             # Initial conditions for all states
         t_eval=T_EVAL,                  # Specific time points to return results

@@ -30,15 +30,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Core numerical tools
-from fit_damper_advanced import compare_interpolation_methods
+from src.fit_damper_advanced import compare_interpolation_methods
 from scipy.interpolate import UnivariateSpline
 from scipy.integrate import solve_ivp
 
 # Project-specific imports
-from constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
-from ODEroad import road_input
-from ODEdampers import F_passive_piecewise
-from params import SuspensionParams
+from src.constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
+from src.ODEroad import road_input
+from src.ODEdampers import F_passive_piecewise
+from src.params import SuspensionParams
 
 # Initialize parameters object for access to system values
 params = SuspensionParams()
