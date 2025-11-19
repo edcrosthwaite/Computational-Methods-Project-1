@@ -19,8 +19,8 @@ All quantities are expressed in SI units unless stated otherwise.
 import numpy as np
 from dataclasses import replace
 
-from params import SuspensionParams
-from passive_sim import run_passive_sim
+from src.params import SuspensionParams
+from src.passive_sim import run_passive_sim
 
 
 def evaluate_passive(params: SuspensionParams, damping_scale: float) -> tuple[float, float, float]:

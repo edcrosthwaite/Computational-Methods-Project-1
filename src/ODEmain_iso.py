@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 
 # Import constants (like time limits, initial state) and vehicle parameters
 from src.constants import (
-    VELOCITY_THRESHOLD, T_START, T_END_BUMP, T_EVAL_BUMP, X_INITIAL_STATE
+    VELOCITY_THRESHOLD, T_START, T_END_ISO, T_EVAL_ISO, X_INITIAL_STATE 
 )
 
 # Import model components
-from src.ODEroad import road_input, road_iso # Road excitation profile
+from src.ODEroad import road_iso # Road excitation profile
 from src.ODEdampers import F_passive_piecewise, F_skyhook_clipped # Damping force models
 from src.ODEodes import quarter_car_ode_passive, quarter_car_ode_skyhook # ODE system definitions
 from src.params import SuspensionParams # Vehicle mass and stiffness parameters
@@ -25,7 +25,7 @@ from src.params import SuspensionParams # Vehicle mass and stiffness parameters
 # Initialise vehicle parameters instance
 params = SuspensionParams()
 
-def ode_bump():
+def ode_iso():
     """
     Runs the numerical simulation for both damper configurations, calculates 
     performance metrics, and plots the comparative results.
@@ -33,7 +33,7 @@ def ode_bump():
     # ----------------------------------------------------------------------
     # 1. ODE SOLVER EXECUTION
     # ----------------------------------------------------------------------
-    '''
+
     # -------------------------------------------------------------
     # ALIGN INITIAL STATE WITH ROAD HEIGHT AT T_START
     # -------------------------------------------------------------
@@ -42,23 +42,23 @@ def ode_bump():
     X0 = np.array(X_INITIAL_STATE, dtype=float)
     X0[0] = z0   # sprung mass displacement = road height
     X0[2] = z0   # unsprung mass displacement = road height
-    '''
+
     # --- Passive simulation (Asymmetric Piecewise Damper) ---
     # The fun argument is a lambda function to pass all required parameters to the ODE solver.
     sol = solve_ivp(
-        fun=lambda t, y: quarter_car_ode_passive(t, y, params.ms, params.mu, params.ks, params.c_comp_low, params.c_comp_high, params.c_reb_low, params.c_reb_high, VELOCITY_THRESHOLD, params.kt, params.v, z_r=road_input(t, params.v)),
-        t_span=(T_START, T_END_BUMP), # Time range for integration
-        y0=X_INITIAL_STATE,      # Initial state vector [x_s, x_s_dot, x_u, x_u_dot]
-        t_eval=T_EVAL_BUMP,           # Specific time points at which to store the solution
+        fun=lambda t, y: quarter_car_ode_passive(t, y, params.ms, params.mu, params.ks, params.c_comp_low, params.c_comp_high, params.c_reb_low, params.c_reb_high, VELOCITY_THRESHOLD, params.kt, params.v, z_r=road_iso(t, params.v)),
+        t_span=(T_START, T_END_ISO), # Time range for integration
+        y0=X0,      # Initial state vector [x_s, x_s_dot, x_u, x_u_dot]
+        t_eval=T_EVAL_ISO,           # Specific time points at which to store the solution
         method='RK45'            # Runge-Kutta 4(5) is a robust integration method
     )
 
     # --- Skyhook simulation (Clipped Skyhook Semi-Active Damper) ---
     sol_sky = solve_ivp(
-        fun=lambda t, y: quarter_car_ode_skyhook(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, params.kt, params.v, z_r=road_input(t, params.v)),
-        t_span=(T_START, T_END_BUMP),
-        y0=X_INITIAL_STATE,
-        t_eval=T_EVAL_BUMP,
+        fun=lambda t, y: quarter_car_ode_skyhook(t, y, params.ms, params.mu, params.ks, params.c_min, params.c_max, params.kt, params.v, z_r=road_iso(t, params.v)),
+        t_span=(T_START, T_END_ISO),
+        y0=X0,
+        t_eval=T_EVAL_ISO,
         method='RK45'
     )
 
@@ -87,8 +87,8 @@ def ode_bump():
     x_u_dot_sky = sol_sky.y[3, :]
 
     # Road profiles for both simulations (at the evaluated time points)
-    z_r_passive = np.array([road_input(ti, params.v) for ti in t])
-    z_r_sky = np.array([road_input(ti, params.v) for ti in t_sky])
+    z_r_passive = np.array([road_iso(ti, params.v) for ti in t])
+    z_r_sky = np.array([road_iso(ti, params.v) for ti in t_sky])
 
     # ----------------------------------------------------------------------
     # 3. CALCULATE DERIVED QUANTITIES
@@ -141,12 +141,12 @@ def ode_bump():
     # 5. PRINT RESULTS
     # ----------------------------------------------------------------------
 
-    print("=== PASSIVE (piecewise nonlinear) (BUMP) ===")
+    print("=== PASSIVE (piecewise nonlinear) (ISO) ===")
     print(f"Max travel:        {max_travel_passive*1000:.2f} mm")
     print(f"Max tyre defl:     {max_tyre_passive*1000:.2f} mm")
     print(f"RMS acceleration:  {rms_acc_passive:.3f} m/s^2")
 
-    print("\n=== SKYHOOK (clipped) (BUMP) ===")
+    print("\n=== SKYHOOK (clipped) (ISO) ===")
     print(f"Max travel:        {max_travel_skyhook*1000:.2f} mm")
     print(f"Max tyre defl:     {max_tyre_skyhook*1000:.2f} mm")
     print(f"RMS acceleration:  {rms_acc_skyhook:.3f} m/s^2")
@@ -192,4 +192,4 @@ def ode_bump():
     plt.show()
 
 if __name__ == "__main__":
-    ode_bump()
+    ode_iso()

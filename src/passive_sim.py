@@ -25,13 +25,13 @@ All units are SI unless otherwise noted.
 import numpy as np
 from scipy.integrate import solve_ivp
 
-from ODEodes import quarter_car_ode_passive
-from ODEroad import road_input
-from params import SuspensionParams
-from constants import (
+from src.ODEodes import quarter_car_ode_passive
+from src.ODEroad import road_input
+from src.params import SuspensionParams
+from src.constants import (
     T_START,
     T_END,
-    T_EVAL,
+    T_EVAL_BUMP,
     X_INITIAL_STATE,
     VELOCITY_THRESHOLD,
 )
@@ -120,10 +120,11 @@ def run_passive_sim(params: SuspensionParams) -> tuple[np.ndarray, np.ndarray, n
             VELOCITY_THRESHOLD,
             params.kt,
             params.v,
+            z_r=road_input(t, params.v)
         ),
         t_span=(T_START, T_END),
         y0=X_INITIAL_STATE,
-        t_eval=T_EVAL,
+        t_eval=T_EVAL_BUMP,
         method="RK45",
     )
 

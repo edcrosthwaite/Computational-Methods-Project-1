@@ -22,8 +22,8 @@ All quantities are expressed in SI units unless stated otherwise.
 import numpy as np
 from dataclasses import replace
 
-from params import SuspensionParams
-from skyhook_sim import run_skyhook_sim
+from src.params import SuspensionParams
+from src.skyhook_sim import run_skyhook_sim
 
 
 def evaluate_skyhook(params: SuspensionParams, damping_scale: float) -> tuple[float, float, float]:
