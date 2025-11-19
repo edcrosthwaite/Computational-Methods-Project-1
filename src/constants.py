@@ -3,8 +3,11 @@ import numpy as np
 
 # Simulation settings
 T_START = 0.0
-T_END = 20.0
-T_EVAL = np.linspace(T_START, T_END, 2000)
+T_END_BUMP = 5.0
+T_END = 5.0
+T_EVAL_BUMP = np.linspace(T_START, T_END_BUMP, 2000) 
+T_END_ISO = 20.0
+T_EVAL_ISO = np.linspace(T_START, T_END_ISO, 8000)
 
 # Initial state: [x_s, x_s_dot, x_u, x_u_dot]
 X_INITIAL_STATE = [0.0, 0.0, 0.0, 0.0]
