@@ -7,8 +7,9 @@ Each function defines the time derivative of the state vector (velocity and
 acceleration) for a specific damper configuration.
 """
 import numpy as np
-from src.ODEroad import road_input
+from src.ODEroad import road_input, road_iso
 from src.ODEdampers import F_passive_piecewise, F_skyhook_clipped
+
 
 # --------------- ODEs -----------------------
 
@@ -42,7 +43,7 @@ def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_comp_low, c_comp_high, c_
 
     # 2. External Input
     # Calculate the current road displacement (z_r) based on time and vehicle speed.
-    z_r = road_input(t, v)
+    z_r = road_iso(t, v)
 
     # 3. Intermediate Quantities
     # x_su: Suspension deflection
@@ -94,7 +95,7 @@ def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v):
     x_s, x_s_dot, x_u, x_u_dot = state
 
     # 2. External Input
-    z_r = road_input(t, v)
+    z_r = road_iso(t, v)
 
     # 3. Intermediate Quantities
     x_su = x_s - x_u
