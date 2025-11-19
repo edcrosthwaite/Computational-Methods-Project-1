@@ -57,10 +57,6 @@ def ode_bump(v: float = None):
         method='RK45'
     )
 
-    # Report solver status to ensure successful integration
-    print(f"Passive ODE solver success: {sol.success}, message: {sol.message}")
-    print(f"Skyhook ODE solver success: {sol_sky.success}, message: {sol_sky.message}")
-
     # ----------------------------------------------------------------------
     # 2. EXTRACT AND PROCESS RESULTS
     # ----------------------------------------------------------------------
