@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from src.constants import CLASS_GQ
 
 def generate_iso8608_profile(
     class_label: str = "E",
@@ -21,17 +21,6 @@ def generate_iso8608_profile(
 
     # Use uppercase internally so "a", "A" both work
     class_label = class_label.upper()
-
-    # Roughness levels for classes A–F at n0 = 0.1 cycles/m
-    GQ_CLASS_C = 1.6e-4
-    CLASS_GQ = {
-        "A": GQ_CLASS_C / 16.0,
-        "B": GQ_CLASS_C / 4.0,
-        "C": GQ_CLASS_C,
-        "D": GQ_CLASS_C * 4.0,
-        "E": GQ_CLASS_C * 16.0,
-        "F": GQ_CLASS_C * 64.0,
-    }
 
     if class_label not in CLASS_GQ:
         raise ValueError(f"Unknown class '{class_label}'. Use A–F only.")
@@ -74,7 +63,7 @@ def generate_iso8608_profile(
     z -= np.mean(z)
 
     # SCALE FACTOR
-    SCALE = 200.0  # adjust overall roughness level
+    SCALE = 10  # adjust overall roughness level
     z *= SCALE
 
     return x, z
