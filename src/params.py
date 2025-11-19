@@ -12,16 +12,10 @@ class SuspensionParams:
     mu: float = 40.0    # unsprung mass [kg]
 
     # Stiffness (initial guesses; ks may be updated by root finding)
-    ks: float = 15000.0   # suspension spring stiffness [N/m] (20 kN/m)
+    ks: float = 27696.0   # suspension spring stiffness from root finding [N/m]
     kt: float = 250000.0  # tyre stiffness [N/m] (190 kN/m)
 
-    v: float = 5.0  # vehicle speed [m/s]
-
-    v: float = 5.0  # vehicle speed [m/s]
-
-    # Passive damper asymmetry (compression vs rebound)
-    c_comp: float = 1000.0   # Ns/m (compression)
-    c_reb: float = 1500.0    # Ns/m (rebound)
+    v: float = 10.0  # vehicle speed [m/s]
 
     # Semi-active damper bounds
     c_min: float = 250.0
@@ -42,7 +36,6 @@ class SuspensionParams:
     unsprung_fn_band: tuple = (10.0, 15.0)  # wheel hop target band
 
     # Simulation
-    t_end: float = 5.0       # default simulation time [s]
     dt: float = 0.0005       # time step for fixed-step RK4 where used [s]
 
     # Random seed for reproducibility in demo regression

@@ -31,7 +31,7 @@ def body_mode_frequency(ks: float, params: SuspensionParams) -> float:
                   [0.0, params.mu]])
 
     # K = [[ks, -ks], [-ks, ks + kt]]
-    # Note: k_t is the tire stiffness.
+    # Note: kt is the tire stiffness.
     K = np.array([[ ks, -ks],
                   [-ks, ks + params.kt]])
 
@@ -117,7 +117,7 @@ def root_finding_entry(p: SuspensionParams, f_target: float) -> tuple[float, flo
         tuple[float, float]: (Tuned ks, Resulting body mode frequency)
     """
     # Start the tuning process, using the current ks as the initial guess
-    ks_tuned = tune_ks_newton(p, f_target, k0=p.ks)
+    ks_tuned = tune_ks_newton(p, f_target, k0=src.constants.K_INITIAL_GUESS)
     # Verify the final frequency achieved by the tuned stiffness
     f_body_final = body_mode_frequency(ks_tuned, p)
 
@@ -138,7 +138,7 @@ def ks_rootfinding():
 
         print(f"----------------------------------------")
         print(f"\nFor target frequency {f_target:.3f} Hz:\n")
-        print(f"Initial ks guess: {p.ks:.1f} N/m")
+        print(f"Initial ks guess: {src.constants.K_INITIAL_GUESS:.1f} N/m")
         print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")
         print(f"Resulting body mode frequency: {f_body_final:.4f} Hz")
         
