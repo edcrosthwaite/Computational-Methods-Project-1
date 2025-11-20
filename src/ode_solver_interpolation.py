@@ -12,9 +12,9 @@ from src.constants import (
 )
 
 # Import model components
-from src.ODEroad import road_input # Road excitation profile
-from src.ODEdampers import F_passive_piecewise, F_skyhook_clipped # Damping force models
-from src.ODEodes import quarter_car_ode_passive, quarter_car_ode_skyhook # ODE system definitions
+from src.input_calculation import road_input # Road excitation profile
+from src.dampers import F_passive_piecewise, F_skyhook_clipped # Damping force models
+from src.system_definition import quarter_car_ode_passive, quarter_car_ode_skyhook # ODE system definitions
 from src.params import SuspensionParams # Vehicle mass and stiffness parameters
 
 # Initialise vehicle parameters instance

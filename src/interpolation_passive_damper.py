@@ -36,8 +36,8 @@ from scipy.integrate import solve_ivp
 
 # Project-specific imports
 from src.constants import (T_START, T_END, T_EVAL, VELOCITY_THRESHOLD, X_INITIAL_STATE)
-from src.ODEroad import road_input
-from src.ODEdampers import F_passive_piecewise
+from src.input_calculation import road_input
+from src.dampers import F_passive_piecewise
 from src.params import SuspensionParams
 
 # Initialize parameters object for access to system values

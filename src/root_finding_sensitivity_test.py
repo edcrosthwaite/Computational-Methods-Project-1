@@ -1,4 +1,4 @@
-from src.ks_fine_tune import ks_rootfinding
+from src.Root_Finding import ks_rootfinding
 
 def rob_test(per:float = 0.03, initial:float = 1.45):
     upper = initial + (initial*0.05)
