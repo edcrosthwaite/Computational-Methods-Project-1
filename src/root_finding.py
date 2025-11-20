@@ -1,5 +1,5 @@
 """
-Design utilities for suspension tuning.
+Root finding for suspension tuning.
 
 This script computes the natural frequencies of the quarter-car model 
 (a 2-DOF system) and uses the Newton–Raphson root-finding algorithm to 
@@ -141,7 +141,7 @@ def ks_rootfinding(f = None):
         ks_tuned, f_body_final = root_finding_entry(p, f_target)
         results[f_target] = (ks_tuned, f_body_final)
 
-        print(f"----------------------------------------")
+        print("----------------------------------------")
         print(f"\nFor target frequency {f_target:.3f} Hz:\n")
         print(f"Initial ks guess: {K_INITIAL_GUESS:.1f} N/m")
         print(f"Tuned ks (Newton): {ks_tuned:.1f} N/m")

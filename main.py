@@ -1,8 +1,8 @@
-from src.ODEnew import ode
-from src.ks_fine_tune import ks_rootfinding
-from src.passive_pareto import passive_suspension_pareto
-from src.skyhook_pareto import skyhook_suspension_pareto
-from src.Peak_Acc_Interol import inter
+from src.ode_solver import ode
+from src.root_finding import ks_rootfinding
+from src.pareto_passive import passive_suspension_pareto
+from src.pareto_skyhook import skyhook_suspension_pareto
+from src.interpolation_velocity_acceleration import inter
 
 if __name__ == "__main__":
     inter()

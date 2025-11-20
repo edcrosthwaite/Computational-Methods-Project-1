@@ -1,12 +1,12 @@
-import numpy as np 
+import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import UnivariateSpline
 import matplotlib.pyplot as plt
 
-from ODEroad import road_input
-from piecewise_interpol import quarter_car_ode_passive_spline
-from constants import (T_START, T_END, T_EVAL, X_INITIAL_STATE, VELOCITY_THRESHOLD)
-from ODEdampers import F_passive_piecewise
+from src.input_calculation import road_input
+from src.interpolation_passive_damper import quarter_car_ode_passive_spline
+from src.constants import (T_START, T_END, T_EVAL, X_INITIAL_STATE, VELOCITY_THRESHOLD)
+from src.dampers import F_passive_piecewise
 
 from params import SuspensionParams
 

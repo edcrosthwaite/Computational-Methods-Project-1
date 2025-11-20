@@ -1,14 +1,9 @@
 """
-odes.py
-
-Contains the two primary Ordinary Differential Equation (ODE) functions 
-required by the scipy.integrate.solve_ivp solver for the quarter-car model.
-Each function defines the time derivative of the state vector (velocity and 
-acceleration) for a specific damper configuration.
+Defines system for ISO test
 """
 import numpy as np
-from src.ODEroad import road_input, road_iso
-from src.ODEdampers import F_passive_piecewise, F_skyhook_clipped
+from src.input_calculation import road_iso
+from src.dampers import F_passive_piecewise, F_skyhook_clipped
 
 
 # --------------- ODEs -----------------------
@@ -43,7 +38,7 @@ def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_comp_low, c_comp_high, c_
 
     # 2. External Input
     # Calculate the current road displacement (z_r) based on time and vehicle speed.
-    '''z_r = road_input(t, v)'''
+    z_r = road_iso(t, v)
 
     # 3. Intermediate Quantities
     # x_su: Suspension deflection
@@ -72,7 +67,7 @@ def quarter_car_ode_passive(t, state, m_s, m_u, k_s, c_comp_low, c_comp_high, c_
     return [x_s_dot, x_s_ddot, x_u_dot, x_u_ddot]
 
 
-def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v, z_r):
+def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v):
     """
     Defines the first-order differential equations for the quarter-car model 
     with a semi-active clipped skyhook damper.
@@ -95,7 +90,7 @@ def quarter_car_ode_skyhook(t, state, m_s, m_u, k_s, c_min, c_max, k_t, v, z_r):
     x_s, x_s_dot, x_u, x_u_dot = state
 
     # 2. External Input
-    '''z_r = road_input(t, v)'''
+    z_r = road_iso(t, v)
 
     # 3. Intermediate Quantities
     x_su = x_s - x_u

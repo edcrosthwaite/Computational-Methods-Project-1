@@ -1,12 +1,12 @@
 """
-road.py
+input_calculation.py
 
 Contains the function defining the road displacement input (z_r or y) 
 for the quarter-car suspension model. This function represents the road 
 profile the vehicle is traveling over.
 """
 import numpy as np
-from src.iso8606_road import generate_iso8608_profile
+from src.iso_road_generator import generate_iso8608_profile
 
 # Road input, half-cosine bump
 def road_input(t, v, h=0.05, L=2.0):

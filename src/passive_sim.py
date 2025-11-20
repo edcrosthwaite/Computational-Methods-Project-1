@@ -25,8 +25,8 @@ All units are SI unless otherwise noted.
 import numpy as np
 from scipy.integrate import solve_ivp
 
-from src.ODEodes import quarter_car_ode_passive
-from src.ODEroad import road_input
+from src.system_definition import quarter_car_ode_passive
+from src.input_calculation import road_input
 from src.params import SuspensionParams
 from src.constants import (
     T_START,

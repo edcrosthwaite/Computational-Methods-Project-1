@@ -19,10 +19,10 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 from params import SuspensionParams
-from constants import T_START, T_END, T_EVAL, X_INITIAL_STATE
-from ODEroad import road_input
-from ODEodes import quarter_car_ode_skyhook
-from ODEdampers import F_skyhook_clipped
+from src.constants import T_START, T_END, T_EVAL, X_INITIAL_STATE
+from src.input_calculation import road_input
+from src.system_definition import quarter_car_ode_skyhook
+from src.dampers import F_skyhook_clipped
 
 from params import SuspensionParams
 
