@@ -137,7 +137,7 @@ def passive_suspension_pareto():
         metrics_list: list[tuple[float, float, float]] = []
 
         for g in g_values:
-            print(f"Running passive sweep at damping scale g = {g:.3f}")
+            #print(f"Running passive sweep at damping scale g = {g:.3f}")
             metrics_list.append(evaluate_passive(params, g))
 
         metrics = np.array(metrics_list)
@@ -200,14 +200,17 @@ def passive_suspension_pareto():
             label="Pareto front",
         )
 
+        plt.title("Passive Suspension Pareto Front")
         plt.xlabel("RMS sprung acceleration [m/s²]")
         plt.ylabel("Max suspension travel [m]")
         cbar = plt.colorbar(sc)
         cbar.set_label("passive damping scale g")
         plt.legend()
         plt.tight_layout()
+        plt.savefig("output/passive_pareto_objective_space.png", dpi=300)
         plt.show()
 
+        """
         # ------------------------------------------------------------------
         # 2. Metrics vs damping scale: design space perspective.
         # ------------------------------------------------------------------
@@ -220,6 +223,7 @@ def passive_suspension_pareto():
         plt.legend()
         plt.tight_layout()
         plt.show()
+        """
 
 
     '''if __name__ == "__main__":'''
@@ -231,15 +235,26 @@ def passive_suspension_pareto():
         #   - print key results and generate plots.
         # ------------------------------------------------------------------
 
+    print(f"Running passive sweep at damping scale 0.05 < g < 2.5 with {25} samples")
     g_values, metrics = sweep_passive(params, g_min=0.05, g_max=2.5, n=25)
     is_eff = pareto_front(metrics)
 
-    print("Pareto-optimal passive damping scales g:")
-    print(g_values[is_eff])
-    print("Corresponding metrics [RMS acc, max travel, max tyre def]:")
-    print(metrics[is_eff])
+
+    print(f"{'g':<10} {'RMS Acc':<12} {'Travel (mm)':<15} {'Tyre Def (mm)':<15}")
+    print("-" * 55)
+
+    # Loop through data and print formatted rows
+    for g, row in zip(g_values[is_eff], metrics[is_eff]):
+        if 0.05 <= g <= 2.5:
+            rms_acc = row[0]
+            max_travel_mm = row[1] * 1000  # Convert m to mm
+            max_tyre_mm = row[2] * 1000    # Convert m to mm
+    
+            # Print with 2 decimal places (.2f)
+            print(f"{g:<10.2f} {rms_acc:<12.2f} {max_travel_mm:<15.2f} {max_tyre_mm:<15.2f}")
 
     plot_results(g_values, metrics, is_eff)
+
 
 if __name__ == "__main__":
     passive_suspension_pareto()

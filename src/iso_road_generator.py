@@ -63,7 +63,7 @@ def generate_iso8608_profile(
     z -= np.mean(z)
 
     # SCALE FACTOR
-    SCALE = 50  # Scale factor of 50 to emulate an intensely rough road
+    SCALE = 150  # Scale factor of 150 to emulate an intensely rough road (Edinburgh Streets)
     z *= SCALE
 
     return x, z

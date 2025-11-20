@@ -48,6 +48,9 @@ def inter():
     plt.ylim(bottom=0)
     plt.grid()
     plt.legend()
+    plt.title("Peak Acceleration vs Velocity with Interpolation")
+    plt.tight_layout()
+    plt.savefig("output/interpolation_peak_acceleration_vs_velocity.png", dpi=300)
     plt.show()
 
     print("Reached end of interpolation\n")
