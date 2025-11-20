@@ -170,12 +170,12 @@ def ode(test_type: str = "bump"):
     # 5. PRINT RESULTS
     # ----------------------------------------------------------------------
 
-    print("=== PASSIVE (piecewise nonlinear) (BUMP) ===")
+    print("=== PASSIVE (piecewise nonlinear) ("+test_type+") ===")
     print(f"Max travel:        {max_travel_passive*1000:.2f} mm")
     print(f"Max tyre defl:     {max_tyre_passive*1000:.2f} mm")
     print(f"RMS acceleration:  {rms_acc_passive:.3f} m/s^2")
 
-    print("\n=== SKYHOOK (clipped) (BUMP) ===")
+    print("\n=== SKYHOOK (clipped) ("+test_type+") ===")
     print(f"Max travel:        {max_travel_skyhook*1000:.2f} mm")
     print(f"Max tyre defl:     {max_tyre_skyhook*1000:.2f} mm")
     print(f"RMS acceleration:  {rms_acc_skyhook:.3f} m/s^2")
@@ -218,6 +218,7 @@ def ode(test_type: str = "bump"):
     plt.grid(True)
     
     plt.tight_layout()
+    plt.savefig("output/"+test_type+"_performance_comparison_passive_vs_skyhook.png", dpi=300)
     plt.show()
 
 if __name__ == "__main__":

@@ -165,7 +165,7 @@ def skyhook_interpolation():
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    # plt.savefig('skyhook_f_v_regression.png') # Uncomment to save the final figure
+    plt.savefig("output/skyhook_damper_fv_characteristic.png", dpi=300)
     plt.show()
 
     # Final confirmation that all steps ran successfully

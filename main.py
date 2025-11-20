@@ -7,11 +7,11 @@ from src.interpolation_passive_damper import piecewise_interpolation
 from src.interpolation_skyhook_damper import skyhook_interpolation  
 
 if __name__ == "__main__":
-    inter()
+    ks_rootfinding()
     ode(test_type="bump")
     ode(test_type="iso")
-    ks_rootfinding()
-    passive_suspension_pareto()
-    skyhook_suspension_pareto()
+    inter()
     piecewise_interpolation()
     skyhook_interpolation()
+    passive_suspension_pareto()
+    skyhook_suspension_pareto()

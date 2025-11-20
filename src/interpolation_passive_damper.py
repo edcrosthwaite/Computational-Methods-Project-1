@@ -114,6 +114,7 @@ def piecewise_interpolation():
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
+    plt.savefig("output/passive_damper_fv_characteristic.png", dpi=300)
     plt.show()
 
 
